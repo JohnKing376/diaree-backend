@@ -1,5 +1,5 @@
-import { Exclude } from 'class-transformer';
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -7,6 +7,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import * as bcrypt from 'bcrypt';
 
 @Entity({ name: 'users' })
 export default class User {
@@ -26,7 +28,6 @@ export default class User {
   @Column({ unique: true, nullable: false })
   email: string;
 
-  @Exclude()
   @Column({ nullable: false })
   password: string;
 
@@ -35,13 +36,16 @@ export default class User {
 
   @CreateDateColumn({
     name: 'created_at',
-    type: 'timestamptz',
   })
   createdDate: Date;
 
   @UpdateDateColumn({
     name: 'update_at',
-    type: 'timestamptz',
   })
   updatedDate: Date;
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10); // Hash password before saving
+  }
 }
