@@ -5,9 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 import { validateEnvironmentConfig } from './shared/config/env.validation';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from './shared/database/typeorm';
-import { UserManagementModule } from './user-management/user-management.module';
-import { UserService } from './user-management/service/user/user.service';
-import { CreateUserController } from './user-management/onboarding/controllers/create-user/create-user.controller';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -16,9 +15,10 @@ import { CreateUserController } from './user-management/onboarding/controllers/c
       validate: validateEnvironmentConfig,
     }),
     TypeOrmModule.forRoot(AppDataSource.options),
-    UserManagementModule,
+    AuthModule,
+    UsersModule,
   ],
-  controllers: [AppController, CreateUserController],
-  providers: [AppService, UserService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
