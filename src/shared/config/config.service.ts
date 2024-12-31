@@ -33,4 +33,8 @@ export class AppConfigService {
   get dbUser(): string {
     return this.configService.get<string>('DB_USERNAME');
   }
+
+  get jwtSecret(): string {
+    return this.configService.get<string>('JWT_SECRET_TOKEN');
+  }
 }

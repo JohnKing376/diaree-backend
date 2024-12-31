@@ -2,12 +2,27 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './controllers/auth.controller';
 import { AuthService } from './services/auth.service';
 import { UsersModule } from 'src/users/users.module';
-// import { TypeOrmModule } from '@nestjs/typeorm';
-// import User from 'src/users/entities/user.entity';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtSecret } from './constants/auth.constants';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from 'src/auth/guards/auth/auth.guard';
 
 @Module({
-  imports: [UsersModule],
+  imports: [
+    UsersModule,
+    JwtModule.register({
+      global: true,
+      secret: jwtSecret.secret,
+      signOptions: { expiresIn: '10 min' },
+    }),
+  ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [
+    AuthService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AuthModule {}
