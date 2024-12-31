@@ -46,6 +46,10 @@ export default class User {
 
   @BeforeInsert()
   async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10); // Hash password before saving
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  get fullname() {
+    return `${this.firstName} ${this.lastName}`;
   }
 }

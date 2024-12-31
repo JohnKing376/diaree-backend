@@ -22,6 +22,7 @@ export class UserService {
     });
 
     await this.userRepository.save(user);
+    // const accessToken = this.authService.generateJwt(user);
 
     return user;
   }

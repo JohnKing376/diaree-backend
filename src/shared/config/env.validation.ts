@@ -25,6 +25,9 @@ export class EnvironmentVariables {
 
   @IsString()
   DB_PASSWORD: string;
+
+  @IsString()
+  JWT_SECRET_TOKEN: string;
 }
 
 export function validateEnvironmentConfig(
