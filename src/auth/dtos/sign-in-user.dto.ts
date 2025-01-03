@@ -1,11 +1,5 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-
 export default class SignInDto {
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
+  userId: number;
 
-  @IsString()
-  @IsNotEmpty()
-  password: string;
+  email: string;
 }

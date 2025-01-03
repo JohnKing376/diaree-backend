@@ -26,6 +26,10 @@ export class Blog {
   @Column()
   content: string;
 
+  @Exclude()
+  @Column({ nullable: true })
+  userId: number;
+
   @ManyToOne(() => User, (user) => user.blogs)
   user: User;
 

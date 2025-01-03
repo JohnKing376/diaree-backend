@@ -4,6 +4,7 @@ import { Blog } from '../entities/blog.entity';
 import { CreateBlogDtos } from '../dtos/create.blog.dtos';
 import { Repository } from 'typeorm';
 import { ListBlogOptions } from '../type_checking/ListBlog.options';
+import User from 'src/users/entities/user.entity';
 
 @Injectable()
 export class BlogService {
@@ -11,12 +12,10 @@ export class BlogService {
     @InjectRepository(Blog) private blogRepository: Repository<Blog>,
   ) {}
 
-  async createBlog(createBlogDto: CreateBlogDtos) {
-    const { title, content } = createBlogDto;
-
+  async createBlog(createBlogDto: CreateBlogDtos, user: User) {
     const newBlog = this.blogRepository.create({
-      title,
-      content,
+      ...createBlogDto,
+      userId: user.id,
     });
 
     await this.blogRepository.save(newBlog);
@@ -43,7 +42,9 @@ export class BlogService {
       const blog = await this.blogRepository.findOneOrFail({
         where: {
           identifier,
+          // userId: user.id,
         },
+        relations: { user: true },
       });
 
       return blog;
