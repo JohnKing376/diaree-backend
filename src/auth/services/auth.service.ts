@@ -1,12 +1,10 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from 'src/users/services/user/user.service';
-import SignInDto from '../dtos/sign-in-user.dto';
 import { compare } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+
+type AuthInput = { email: string; password: string };
+type SignInInput = { userId: number; email: string };
 
 @Injectable()
 export class AuthService {
@@ -15,22 +13,33 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async SignIn(userSignInDto: SignInDto) {
-    const { email, password } = userSignInDto;
-    const user = await this.userService.findUserByEmail(email);
+  async validateUser(input: AuthInput) {
+    const user = await this.userService.findUserByEmail(input.email);
+    const IsPasswordMatch = await compare(input.password, user.password);
 
-    if (!user) throw new NotFoundException('User not found');
+    if (IsPasswordMatch) {
+      return {
+        userId: user.id,
+        email: user.email,
+      };
+    }
+    return null;
+  }
 
-    const IsPasswordMatch = await compare(password, user.password);
+  async authenticate(input: AuthInput) {
+    const user = await this.validateUser(input);
 
-    if (!IsPasswordMatch) throw new BadRequestException('Invalid credentials');
+    if (!user) throw new UnauthorizedException();
 
-    const payload = { email: email, sub: user.id };
+    return await this.SignIn(user);
+  }
 
+  async SignIn(userSignInDto: SignInInput) {
+    const payload = { email: userSignInDto.email, sub: userSignInDto.userId };
     const token = await this.jwtService.signAsync(payload);
 
     return {
-      access_token: token,
+      token,
     };
   }
 }

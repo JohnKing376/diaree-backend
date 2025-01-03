@@ -4,14 +4,18 @@ import {
   CreateDateColumn,
   Entity,
   Generated,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import * as bcrypt from 'bcryptjs';
+import { Blog } from 'src/blog/entities/blog.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'users' })
 export default class User {
+  @Exclude()
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -28,11 +32,15 @@ export default class User {
   @Column({ unique: true, nullable: false })
   email: string;
 
+  @Exclude()
   @Column({ nullable: false })
   password: string;
 
   @Column({ default: false })
   isActive: boolean;
+
+  @OneToMany(() => Blog, (blog) => blog.user)
+  blogs: Blog[];
 
   @CreateDateColumn({
     name: 'created_at',
