@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from 'src/users/services/user/user.service';
 import { compare } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
@@ -23,7 +28,8 @@ export class AuthService {
         email: user.email,
       };
     }
-    return null;
+
+    throw new HttpException('Invalid Credentials', HttpStatus.BAD_REQUEST);
   }
 
   async authenticate(input: AuthInput) {

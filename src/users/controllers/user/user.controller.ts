@@ -44,7 +44,7 @@ export class UserController {
           fullName: user.fullname,
           meta: {
             isActive: user.isActive,
-            createdAt: user.createdDate,
+            createdAt: user.createdAt,
           },
         },
       });

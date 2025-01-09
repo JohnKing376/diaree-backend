@@ -45,12 +45,12 @@ export default class User {
   @CreateDateColumn({
     name: 'created_at',
   })
-  createdDate: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({
     name: 'update_at',
   })
-  updatedDate: Date;
+  updatedAt: Date;
 
   @BeforeInsert()
   async hashPassword() {

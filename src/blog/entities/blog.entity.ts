@@ -16,7 +16,7 @@ export class Blog {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   @Generated('uuid')
   identifier: string;
 
@@ -27,7 +27,7 @@ export class Blog {
   content: string;
 
   @Exclude()
-  @Column({ nullable: true })
+  @Column()
   userId: number;
 
   @ManyToOne(() => User, (user) => user.blogs)
@@ -36,10 +36,10 @@ export class Blog {
   @CreateDateColumn({
     name: 'created_at',
   })
-  createdDate: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({
-    name: 'update_at',
+    name: 'updated_at',
   })
-  updatedDate: Date;
+  updatedAt: Date;
 }

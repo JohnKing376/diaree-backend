@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Blog } from '../entities/blog.entity';
 import { CreateBlogDtos } from '../dtos/create.blog.dtos';
 import { Repository } from 'typeorm';
-import { ListBlogOptions } from '../type_checking/ListBlog.options';
+// import { ListBlogOptions } from '../type_checking/ListBlog.options';
 import User from 'src/users/entities/user.entity';
 
 @Injectable()
@@ -42,7 +42,6 @@ export class BlogService {
       const blog = await this.blogRepository.findOneOrFail({
         where: {
           identifier,
-          // userId: user.id,
         },
         relations: { user: true },
       });
@@ -67,13 +66,15 @@ export class BlogService {
     }
   }
 
-  async listBlogs(listBlogOptions: ListBlogOptions) {
-    const blogQuery = this.blogRepository.createQueryBuilder('blog');
+  async listBlogs(listBlogOptions: { ownerId: Array<number> }) {
+    const blogQuery = this.blogRepository
+      .createQueryBuilder('blog')
+      .orderBy('blog.id', 'DESC');
 
-    const { title } = listBlogOptions;
+    const { ownerId } = listBlogOptions;
 
-    if (title.length) {
-      blogQuery.andWhere('blog.title LIKE :title', { title: `%${title}%` });
+    if (ownerId.length) {
+      blogQuery.where('blog.userId = :...ownerId', { ownerId });
     }
 
     return blogQuery.getMany();

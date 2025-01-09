@@ -10,5 +10,5 @@ export class UpdateUserDto {
   @IsEmail()
   email?: string;
 
-  updatedDate: Date;
+  updatedAt: Date;
 }

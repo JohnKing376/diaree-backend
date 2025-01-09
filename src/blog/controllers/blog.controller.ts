@@ -11,10 +11,10 @@ import {
 import { BlogService } from '../services/blog.service';
 import { CreateBlogDtos } from '../dtos/create.blog.dtos';
 import { GetUser } from 'src/auth/decorators/get_user.decorator';
-import SignInDto from 'src/auth/dtos/sign-in-user.dto';
 import { UserService } from 'src/users/services/user/user.service';
 import { Response } from 'express';
 import User from 'src/users/entities/user.entity';
+import authUserDto from 'src/auth/dtos/auth-user.dto';
 
 @Controller('blog')
 export class BlogController {
@@ -27,7 +27,7 @@ export class BlogController {
   @HttpCode(201)
   async createBlog(
     @GetUser()
-    user: SignInDto,
+    user: authUserDto,
     @Body() createBlogDto: CreateBlogDtos,
     @Res() response: Response,
   ) {
@@ -42,8 +42,8 @@ export class BlogController {
         identifier: blog.identifier,
         title: blog.title,
         content: blog.content,
-        createdAt: blog.createdDate,
-        updatedAt: blog.updatedDate,
+        createdAt: blog.createdAt,
+        updatedAt: blog.updatedAt,
       },
     });
   }
@@ -56,5 +56,20 @@ export class BlogController {
     console.log(identifier);
     const blog = await this.blogService.getBlogByIdentifer(identifier);
     return blog;
+  }
+
+  @HttpCode(200)
+  @Get('/get/all')
+  async getAllBlogs(@GetUser() user: authUserDto) {
+    const userBlogs = await this.blogService.listBlogs({
+      ownerId: user ? [user.userId] : [],
+    });
+
+    return {
+      message: 'Blogs resource fetched successfully',
+      statusCode: HttpStatus.OK,
+      status: 'SUCCESS',
+      userBlogs,
+    };
   }
 }

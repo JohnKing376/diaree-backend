@@ -29,7 +29,7 @@ export class AuthController {
     const user = await this.userService.findUserByEmail(input.email);
 
     await this.userService.updateUser(user.id, {
-      updatedDate: new Date(),
+      updatedAt: new Date(),
     });
 
     response.send({
@@ -45,8 +45,7 @@ export class AuthController {
         fullName: user.fullname,
         meta: {
           isActive: user.isActive,
-          createdAt: user.createdDate,
-          lastLoginDate: user.updatedDate,
+          lastLoginDate: user.updatedAt,
         },
       },
     });
