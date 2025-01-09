@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from './shared/database/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { BlogModule } from './blog/blog.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { UsersModule } from './users/users.module';
     TypeOrmModule.forRoot(AppDataSource.options),
     AuthModule,
     UsersModule,
+    BlogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

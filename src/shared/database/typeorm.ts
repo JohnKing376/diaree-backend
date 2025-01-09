@@ -25,5 +25,6 @@ export const AppDataSource = new DataSource({
     'dist/**/*.entity{.ts,.js}',
     'dist/**/entities/**/*.entity{.ts,.js}',
   ],
+  migrationsRun: true,
   synchronize: environmentConfig.nodeEnv !== 'production',
 } as DataSourceOptions);
